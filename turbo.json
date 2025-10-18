@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": ["NODE_ENV", "FINNHUB_API_KEY"],
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "dev": {
