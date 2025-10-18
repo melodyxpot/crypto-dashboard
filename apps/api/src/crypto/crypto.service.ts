@@ -1,11 +1,6 @@
-import {
-  Injectable,
-  Logger,
-  OnModuleInit,
-  OnModuleDestroy,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import WebSocket from 'ws';
+import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import WebSocket from "ws";
 
 export interface CryptoPair {
   id: string;
@@ -38,30 +33,30 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
 
   private readonly PAIR_CONFIGS = [
     {
-      id: 'eth-usdc',
-      from: 'ETH',
-      to: 'USDC',
-      symbol: 'BINANCE:ETHUSDC',
-      color: 'var(--chart-1)',
+      id: "eth-usdc",
+      from: "ETH",
+      to: "USDC",
+      symbol: "BINANCE:ETHUSDC",
+      color: "var(--chart-1)",
     },
     {
-      id: 'eth-usdt',
-      from: 'ETH',
-      to: 'USDT',
-      symbol: 'BINANCE:ETHUSDT',
-      color: 'var(--chart-2)',
+      id: "eth-usdt",
+      from: "ETH",
+      to: "USDT",
+      symbol: "BINANCE:ETHUSDT",
+      color: "var(--chart-2)",
     },
     {
-      id: 'eth-btc',
-      from: 'ETH',
-      to: 'BTC',
-      symbol: 'BINANCE:ETHBTC',
-      color: 'var(--chart-3)',
+      id: "eth-btc",
+      from: "ETH",
+      to: "BTC",
+      symbol: "BINANCE:ETHBTC",
+      color: "var(--chart-3)",
     },
   ];
 
   constructor(private configService: ConfigService) {
-    this.FINNHUB_API_KEY = this.configService.get<string>('FINNHUB_API_KEY') || '';
+    this.FINNHUB_API_KEY = this.configService.get<string>("FINNHUB_API_KEY") || "";
   }
 
   onModuleInit() {
@@ -92,34 +87,32 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
 
   private connectToFinnhub() {
     if (!this.FINNHUB_API_KEY) {
-      this.logger.error('FINNHUB_API_KEY is not set in environment variables');
+      this.logger.error("FINNHUB_API_KEY is not set in environment variables");
       return;
     }
 
     try {
-      this.finnhubWs = new WebSocket(
-        `wss://ws.finnhub.io?token=${this.FINNHUB_API_KEY}`,
-      );
+      this.finnhubWs = new WebSocket(`wss://ws.finnhub.io?token=${this.FINNHUB_API_KEY}`);
 
-      this.finnhubWs.on('open', () => {
-        this.logger.log('Connected to Finnhub WebSocket');
+      this.finnhubWs.on("open", () => {
+        this.logger.log("Connected to Finnhub WebSocket");
         this.subscribeToSymbols();
       });
 
-      this.finnhubWs.on('message', (data: WebSocket.Data) => {
+      this.finnhubWs.on("message", (data: WebSocket.Data) => {
         this.handleFinnhubMessage(data);
       });
 
-      this.finnhubWs.on('error', (error) => {
-        this.logger.error('Finnhub WebSocket error:', error.message);
+      this.finnhubWs.on("error", (error) => {
+        this.logger.error("Finnhub WebSocket error:", error.message);
       });
 
-      this.finnhubWs.on('close', () => {
-        this.logger.warn('Finnhub WebSocket closed. Reconnecting...');
+      this.finnhubWs.on("close", () => {
+        this.logger.warn("Finnhub WebSocket closed. Reconnecting...");
         this.scheduleReconnect();
       });
     } catch (error) {
-      this.logger.error('Failed to connect to Finnhub:', error);
+      this.logger.error("Failed to connect to Finnhub:", error);
       this.scheduleReconnect();
     }
   }
@@ -131,7 +124,7 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
 
     this.PAIR_CONFIGS.forEach((config) => {
       const subscribeMessage = JSON.stringify({
-        type: 'subscribe',
+        type: "subscribe",
         symbol: config.symbol,
       });
       this.finnhubWs?.send(subscribeMessage);
@@ -143,21 +136,17 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
     try {
       const message = JSON.parse(data.toString());
 
-      if (message.type === 'trade' && message.data) {
+      if (message.type === "trade" && message.data) {
         message.data.forEach((trade: any) => {
           this.updatePriceForSymbol(trade.s, trade.p, trade.t);
         });
       }
     } catch (error) {
-      this.logger.error('Error parsing Finnhub message:', error);
+      this.logger.error("Error parsing Finnhub message:", error);
     }
   }
 
-  private updatePriceForSymbol(
-    symbol: string,
-    price: number,
-    timestamp: number,
-  ) {
+  private updatePriceForSymbol(symbol: string, price: number, timestamp: number) {
     const config = this.PAIR_CONFIGS.find((c) => c.symbol === symbol);
     if (!config) return;
 
@@ -173,17 +162,12 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
 
     const hourlyAverage =
       filteredHistory.length > 0
-        ? filteredHistory.reduce((sum, h) => sum + h.price, 0) /
-          filteredHistory.length
+        ? filteredHistory.reduce((sum, h) => sum + h.price, 0) / filteredHistory.length
         : price;
 
     const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
-    const dayOldPrice = filteredHistory.find(
-      (h) => h.timestamp <= twentyFourHoursAgo,
-    )?.price;
-    const change24h = dayOldPrice
-      ? ((price - dayOldPrice) / dayOldPrice) * 100
-      : 0;
+    const dayOldPrice = filteredHistory.find((h) => h.timestamp <= twentyFourHoursAgo)?.price;
+    const change24h = dayOldPrice ? ((price - dayOldPrice) / dayOldPrice) * 100 : 0;
 
     const now = Date.now();
     const chartHistory =
@@ -209,7 +193,7 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
     }
 
     this.reconnectTimeout = setTimeout(() => {
-      this.logger.log('Attempting to reconnect to Finnhub...');
+      this.logger.log("Attempting to reconnect to Finnhub...");
       this.connectToFinnhub();
     }, this.RECONNECT_DELAY);
   }

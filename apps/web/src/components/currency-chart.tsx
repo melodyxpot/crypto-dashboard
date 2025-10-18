@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts"
+import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 interface CurrencyChartProps {
-  data: Array<{ time: number; price: number }>
-  color: string
+  data: Array<{ time: number; price: number }>;
+  color: string;
 }
 
 export default function CurrencyChart({ data, color }: CurrencyChartProps) {
@@ -28,14 +28,21 @@ export default function CurrencyChart({ data, color }: CurrencyChartProps) {
                       {new Date(payload[0].payload.time).toLocaleTimeString()}
                     </div>
                   </div>
-                )
+                );
               }
-              return null
+              return null;
             }}
           />
-          <Line type="monotone" dataKey="price" stroke={color} strokeWidth={2} dot={false} animationDuration={300} />
+          <Line
+            type="monotone"
+            dataKey="price"
+            stroke={color}
+            strokeWidth={2}
+            dot={false}
+            animationDuration={300}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 }

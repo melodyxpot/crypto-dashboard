@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
-export type ConnectionState = 'connecting' | 'connected' | 'disconnected';
+export type ConnectionState = "connecting" | "connected" | "disconnected";
 
 export interface CryptoPair {
   id: string;
@@ -17,47 +17,46 @@ export interface CryptoPair {
   color: string;
 }
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export function useCryptoData() {
   const [pairs, setPairs] = useState<CryptoPair[]>([]);
-  const [connectionState, setConnectionState] =
-    useState<ConnectionState>('connecting');
+  const [connectionState, setConnectionState] = useState<ConnectionState>("connecting");
   const [error, setError] = useState<string | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     const newSocket = io(BACKEND_URL, {
-      transports: ['websocket', 'polling'],
+      transports: ["websocket", "polling"],
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: Infinity,
     });
 
-    newSocket.on('connect', () => {
-      setConnectionState('connected');
+    newSocket.on("connect", () => {
+      setConnectionState("connected");
       setError(null);
     });
 
-    newSocket.on('disconnect', () => {
-      setConnectionState('disconnected');
-      setError('Connection lost. Attempting to reconnect...');
+    newSocket.on("disconnect", () => {
+      setConnectionState("disconnected");
+      setError("Connection lost. Attempting to reconnect...");
     });
 
-    newSocket.on('connect_error', (err) => {
-      setConnectionState('disconnected');
+    newSocket.on("connect_error", (err) => {
+      setConnectionState("disconnected");
       setError(`Connection error: ${err.message}`);
     });
 
     newSocket.on(
-      'crypto-update',
+      "crypto-update",
       (data: { type: string; pairs: CryptoPair[]; connected: boolean }) => {
         if (data.pairs && data.pairs.length > 0) {
           setPairs(data.pairs);
-          setConnectionState(data.connected ? 'connected' : 'disconnected');
+          setConnectionState(data.connected ? "connected" : "disconnected");
 
           if (!data.connected) {
-            setError('Backend is connecting to data source...');
+            setError("Backend is connecting to data source...");
           } else if (error) {
             setError(null);
           }

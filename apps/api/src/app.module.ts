@@ -1,17 +1,17 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 
-import { LinksModule } from './links/links.module';
-import { CryptoModule } from './crypto/crypto.module';
+import { LinksModule } from "./links/links.module";
+import { CryptoModule } from "./crypto/crypto.module";
 
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
+import { AppService } from "./app.service";
+import { AppController } from "./app.controller";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ".env",
     }),
     LinksModule,
     CryptoModule,
