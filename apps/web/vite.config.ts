@@ -1,14 +1,17 @@
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, mergeConfig } from "vite";
+import { reactConfig } from "@repo/vite-config/react";
+import { viteConfig } from "@repo/jest-config/vite";
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+export default mergeConfig(
+  mergeConfig(reactConfig, viteConfig),
+  defineConfig({
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
     },
-  },
-});
+  }),
+);

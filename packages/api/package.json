@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "pnpm build --watch",
     "build": "tsc -b -v",
+    "start": "node dist/entry.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
   },
   "main": "./dist/entry.js",
