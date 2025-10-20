@@ -1,124 +1,298 @@
-# Turborepo starter
+# Crypto Dashboard
 
-This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+A real-time cryptocurrency dashboard that displays live exchange rates for ETH/USDC, ETH/USDT, and ETH/BTC pairs using WebSocket connections.
 
-## Using this example
+## Features
 
-Run the following command:
+- **Real-time data streaming** from Finnhub API
+- **Live charts** for all three currency pairs
+- **Hourly averages** calculated and displayed
+- **WebSocket connection** between backend and frontend
+- **Automatic reconnection** handling
+- **Production-ready** turborepo monorepo setup
 
-```bash
-npx create-turbo@latest -e with-nestjs
-```
+## Tech Stack
 
-## What's inside?
+### Backend
+- **NestJS** - Progressive Node.js framework
+- **TypeScript** - Type-safe development
+- **Socket.IO** - Real-time bidirectional communication
+- **WebSocket (ws)** - Finnhub API connection
+- **Jest** - Testing framework
 
-This Turborepo includes the following packages & apps:
+### Frontend
+- **React 19** - UI library
+- **Vite** - Fast build tool
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **Recharts** - Chart library
+- **Socket.IO Client** - WebSocket client
+- **Vitest** - Testing framework
 
-### Apps and Packages
+## Prerequisites
 
-```shell
-.
-├── apps
-│   ├── api                       # NestJS app (https://nestjs.com).
-│   └── web                       # Next.js app (https://nextjs.org).
-└── packages
-    ├── @repo/api                 # Shared `NestJS` resources.
-    ├── @repo/eslint-config       # `eslint` configurations (includes `prettier`)
-    ├── @repo/jest-config         # `jest` configurations
-    ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
-    └── @repo/ui                  # Shareable stub React component library.
-```
+- **Node.js** >= 18.0.0
+- **pnpm** >= 8.15.5
+- **Finnhub API Key** (free at https://finnhub.io)
 
-Each package and application are mostly written in [TypeScript](https://www.typescriptlang.org/).
+## Installation
 
-### Utilities
-
-This `Turborepo` has some additional tools already set for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type-safety
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Jest](https://prettier.io) & [Playwright](https://playwright.dev/) for testing
-
-### Commands
-
-This `Turborepo` already configured useful commands for all your apps and packages.
-
-#### Build
+### 1. Clone the repository
 
 ```bash
-# Will build all the app & packages with the supported `build` script.
-pnpm run build
-
-# ℹ️ If you plan to only build apps individually,
-# Please make sure you've built the packages first.
+git clone <repository-url>
+cd crypto-dashboard
 ```
 
-#### Develop
+### 2. Install dependencies
 
 ```bash
-# Will run the development server for all the app & packages with the supported `dev` script.
-pnpm run dev
+pnpm install
 ```
 
-#### test
+### 3. Configure environment variables
+
+Create a `.env` file in `apps/api` directory:
 
 ```bash
-# Will launch a test suites for all the app & packages with the supported `test` script.
-pnpm run test
-
-# You can launch e2e testes with `test:e2e`
-pnpm run test:e2e
-
-# See `@repo/jest-config` to customize the behavior.
+cd apps/api
+cp .env.example .env
 ```
 
-#### Lint
+Edit `apps/api/.env` and add your Finnhub API key:
+
+```env
+FINNHUB_API_KEY=your_finnhub_api_key_here
+```
+
+**Get your free API key at:** https://finnhub.io
+
+## Running the Application
+
+### Development Mode
+
+Run both backend and frontend in development mode with hot-reload:
 
 ```bash
-# Will lint all the app & packages with the supported `lint` script.
-# See `@repo/eslint-config` to customize the behavior.
-pnpm run lint
+pnpm dev
 ```
 
-#### Format
+**Access the application:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
+
+**Run individually:**
 
 ```bash
-# Will format all the supported `.ts,.js,json,.tsx,.jsx` files.
-# See `@repo/eslint-config/prettier-base.js` to customize the behavior.
-pnpm format
+# Backend only
+cd apps/api
+pnpm dev
+
+# Frontend only
+cd apps/web
+pnpm dev
 ```
 
-### Remote Caching
+### Production Mode
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+#### 1. Build all projects
 
 ```bash
-npx turbo login
+pnpm build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+#### 2. Start in production mode
 
 ```bash
-npx turbo link
+pnpm start
 ```
 
-## Useful Links
+**Access the application:**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000
 
-This example take some inspiration the [with-nextjs](https://github.com/vercel/turborepo/tree/main/examples/with-nextjs) `Turbo` example and [01-cats-app](https://github.com/nestjs/nest/tree/master/sample/01-cats-app) `NestJs` sample.
+**Run individually:**
 
-Learn more about the power of Turborepo:
+```bash
+# Backend only
+cd apps/api
+pnpm start
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+# Frontend only
+cd apps/web
+pnpm start
+```
+
+## Project Structure
+
+```
+crypto-dashboard/
+├── apps/
+│   ├── api/                    # NestJS backend
+│   │   ├── src/
+│   │   │   ├── crypto/         # Crypto WebSocket module
+│   │   │   │   ├── crypto.service.ts    # Finnhub connection
+│   │   │   │   ├── crypto.gateway.ts    # Socket.IO gateway
+│   │   │   │   └── crypto.module.ts
+│   │   │   ├── app.module.ts
+│   │   │   └── main.ts
+│   │   ├── .env                # Environment variables
+│   │   └── package.json
+│   │
+│   └── web/                    # React + Vite frontend
+│       ├── src/
+│       │   ├── components/     # UI components
+│       │   ├── hooks/          # Custom hooks
+│       │   │   └── use-crypto-data.ts   # WebSocket hook
+│       │   ├── App.tsx
+│       │   └── main.tsx
+│       └── package.json
+│
+├── packages/                   # Shared packages
+│   ├── api/                    # Shared API types
+│   ├── eslint-config/          # Shared ESLint configs
+│   ├── jest-config/            # Shared testing configs
+│   ├── typescript-config/      # Shared TypeScript configs
+│   └── vite-config/            # Shared Vite configs
+│
+├── package.json                # Root package.json
+├── turbo.json                  # Turborepo config
+└── pnpm-workspace.yaml         # pnpm workspace config
+```
+
+## Available Scripts
+
+### Root Level
+
+```bash
+pnpm dev          # Run all apps in development mode
+pnpm build        # Build all apps for production
+pnpm start        # Run all apps in production mode
+pnpm test         # Run tests in all apps
+pnpm lint         # Lint all projects
+pnpm format       # Format code with Prettier
+```
+
+### API (apps/api)
+
+```bash
+pnpm dev          # Development with hot-reload
+pnpm build        # Build for production
+pnpm start        # Run production build
+pnpm test         # Run Jest tests
+pnpm lint         # Lint TypeScript files
+```
+
+### Web (apps/web)
+
+```bash
+pnpm dev          # Development with Vite
+pnpm build        # Build for production
+pnpm start        # Preview production build
+pnpm test         # Run Vitest tests
+pnpm lint         # Lint TypeScript files
+```
+
+## Environment Variables
+
+### Backend (apps/api/.env)
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `FINNHUB_API_KEY` | Your Finnhub API key | Yes |
+
+### Frontend (apps/web/.env.local) - Optional
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_BACKEND_URL` | Backend API URL | http://localhost:3000 |
+
+## How It Works
+
+### Backend Flow
+
+1. **CryptoService** connects to Finnhub WebSocket API on module initialization
+2. Subscribes to real-time trade data for:
+   - `BINANCE:ETHUSDC`
+   - `BINANCE:ETHUSDT`
+   - `BINANCE:ETHBTC`
+3. Calculates hourly averages from incoming price data
+4. Stores price history (last hour) for each pair
+5. **CryptoGateway** broadcasts updates to connected frontend clients every 2 seconds via Socket.IO
+
+### Frontend Flow
+
+1. **useCryptoData** hook establishes Socket.IO connection to backend
+2. Listens for `crypto-update` events with latest price data
+3. Updates React state with new data
+4. Components re-render with updated prices, charts, and averages
+5. Handles connection states (connecting, connected, disconnected)
+
+### Data Flow Diagram
+
+```
+Finnhub API → WebSocket → NestJS Service → Socket.IO → React Frontend
+                           ↓
+                    Hourly Average
+                    Calculation
+```
+
+## Troubleshooting
+
+### Frontend can't connect to backend
+
+- Ensure backend is running on port 3000
+- Check `VITE_BACKEND_URL` environment variable
+- Verify CORS is enabled (already configured)
+
+### No data from Finnhub
+
+- Verify `FINNHUB_API_KEY` is set correctly in `apps/api/.env`
+- Check Finnhub API rate limits (60 requests/minute on free tier)
+- Check backend logs for connection errors
+
+### Build errors
+
+```bash
+# Clear all caches and reinstall
+pnpm clean
+pnpm install
+pnpm build
+```
+
+### Port already in use
+
+```bash
+# Kill process on port 3000 (API)
+npx kill-port 3000
+
+# Kill process on port 5173 (Web)
+npx kill-port 5173
+```
+
+## Testing
+
+Run tests for all projects:
+
+```bash
+pnpm test
+```
+
+Run tests in watch mode:
+
+```bash
+cd apps/api && pnpm test:watch   # Backend
+cd apps/web && pnpm test          # Frontend
+```
+
+## License
+
+UNLICENSED
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
