@@ -26,7 +26,7 @@ export class CryptoService implements OnModuleInit, OnModuleDestroy {
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private readonly FINNHUB_API_KEY: string;
   private readonly RECONNECT_DELAY = 5000;
-  private readonly HISTORY_LENGTH = 30;
+  private readonly HISTORY_LENGTH = 50;
 
   private pairs: Map<string, CryptoPair> = new Map();
   private priceHistory: Map<string, PriceData[]> = new Map();

@@ -14,6 +14,7 @@ A real-time cryptocurrency dashboard that displays live exchange rates for ETH/U
 ## Tech Stack
 
 ### Backend
+
 - **NestJS** - Progressive Node.js framework
 - **TypeScript** - Type-safe development
 - **Socket.IO** - Real-time bidirectional communication
@@ -21,6 +22,7 @@ A real-time cryptocurrency dashboard that displays live exchange rates for ETH/U
 - **Jest** - Testing framework
 
 ### Frontend
+
 - **React 19** - UI library
 - **Vite** - Fast build tool
 - **TypeScript** - Type safety
@@ -78,6 +80,7 @@ pnpm dev
 ```
 
 **Access the application:**
+
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 
@@ -108,6 +111,7 @@ pnpm start
 ```
 
 **Access the application:**
+
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 
@@ -197,14 +201,14 @@ pnpm lint         # Lint TypeScript files
 
 ### Backend (apps/api/.env)
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `FINNHUB_API_KEY` | Your Finnhub API key | Yes |
+| Variable          | Description          | Required |
+| ----------------- | -------------------- | -------- |
+| `FINNHUB_API_KEY` | Your Finnhub API key | Yes      |
 
 ### Frontend (apps/web/.env.local) - Optional
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable           | Description     | Default               |
+| ------------------ | --------------- | --------------------- |
 | `VITE_BACKEND_URL` | Backend API URL | http://localhost:3000 |
 
 ## How It Works

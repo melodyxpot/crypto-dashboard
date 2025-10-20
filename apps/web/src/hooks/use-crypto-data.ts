@@ -51,7 +51,35 @@ export function useCryptoData() {
       "crypto-update",
       (data: { type: string; pairs: CryptoPair[]; connected: boolean }) => {
         if (data.pairs && data.pairs.length > 0) {
-          setPairs(data.pairs);
+          setPairs((prevPairs) => {
+            if (prevPairs.length === 0) {
+              return data.pairs;
+            }
+
+            return data.pairs.map((newPair) => {
+              const prevPair = prevPairs.find((p) => p.id === newPair.id);
+              if (!prevPair) return newPair;
+
+              const mergedHistory = [...prevPair.history];
+              const lastTime = mergedHistory[mergedHistory.length - 1]?.time || 0;
+
+              newPair.history.forEach((point) => {
+                if (point.time > lastTime) {
+                  mergedHistory.push(point);
+                }
+              });
+
+              if (mergedHistory.length > 50) {
+                mergedHistory.splice(0, mergedHistory.length - 50);
+              }
+
+              return {
+                ...newPair,
+                history: mergedHistory,
+              };
+            });
+          });
+
           setConnectionState(data.connected ? "connected" : "disconnected");
 
           if (!data.connected) {

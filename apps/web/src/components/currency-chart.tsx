@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 interface CurrencyChartProps {
@@ -8,11 +9,22 @@ interface CurrencyChartProps {
 }
 
 export default function CurrencyChart({ data, color }: CurrencyChartProps) {
+  const chartData = useMemo(() => data, [data]);
+
+  const yDomain = useMemo(() => {
+    if (chartData.length === 0) return [0, 1];
+    const prices = chartData.map((d) => d.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const padding = (max - min) * 0.1;
+    return [min - padding, max + padding];
+  }, [chartData]);
+
   return (
     <div className="h-[120px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <YAxis domain={["dataMin", "dataMax"]} hide />
+        <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+          <YAxis domain={yDomain} hide />
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
@@ -39,7 +51,8 @@ export default function CurrencyChart({ data, color }: CurrencyChartProps) {
             stroke={color}
             strokeWidth={2}
             dot={false}
-            animationDuration={300}
+            isAnimationActive={false}
+            connectNulls
           />
         </LineChart>
       </ResponsiveContainer>

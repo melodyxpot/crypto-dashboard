@@ -53,7 +53,7 @@ export class CryptoGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         pairs,
         connected,
       });
-    }, 2000);
+    }, 1000);
   }
 
   onModuleDestroy() {
